@@ -1,0 +1,13 @@
+#!/bin/bash
+apt-get update
+apt-get install python-pip  -y
+apt-get install libpq-dev -y
+apt-get install python-dev -y
+
+#redis
+apt-get install -y python-software-properties
+add-apt-repository -y ppa:rwky/redis
+apt-get update
+apt-get install -y redis-server
+
+pip install -U virtualenv

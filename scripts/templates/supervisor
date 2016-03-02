@@ -1,0 +1,6 @@
+[program:$PROJECTNAME]
+command = $COMMAND
+user = $USER
+stdout_logfile = $LOGFILE
+redirect_stderr = true
+environment=LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8

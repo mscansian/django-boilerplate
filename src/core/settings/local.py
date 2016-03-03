@@ -7,5 +7,7 @@ PRODUCTION = False
 
 if PRODUCTION:
     from core.settings.production import *
+    assert DEBUG == False
+    assert SECRET_KEY != 'DEBUG-SECRET-KEY'
 
 # Override settings using this file

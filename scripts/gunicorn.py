@@ -48,9 +48,9 @@ with open(os.path.join(gunicorn_dir, "supervisor.conf"), "w") as f:
 create_link = raw_input("Do you want to create gunicorn link to supervisor? (yes/NO)? ")
 if create_link.lower() == "yes":
     print ("Creating supervisor link...")
-    print ("ln -s {} /etc/supervisor/conf.d/{}.conf".format(
+    print ("sudo ln -s {} /etc/supervisor/conf.d/{}.conf".format(
         os.path.join(gunicorn_dir, "supervisor.conf"), project_name))
-    os.system("ln -s {} /etc/supervisor/conf.d/{}.conf".format(
+    os.system("sudo ln -s {} /etc/supervisor/conf.d/{}.conf".format(
         os.path.join(gunicorn_dir, "supervisor.conf"), project_name))
     print ("Loading supervisor...")
     print ("sudo supervisorctl reread && sudo supervisorctl update")
@@ -61,7 +61,7 @@ if create_link.lower() == "yes":
 else:
     print ("")
     print ("All files were created under 'gunicorn' folder, but you still need to configure supervisor:")
-    print ("ln -s {} /etc/supervisor/conf.d/{}.conf".format(
+    print ("sudo ln -s {} /etc/supervisor/conf.d/{}.conf".format(
         os.path.join(gunicorn_dir, "supervisor.conf"), project_name))
     print ("sudo supervisorctl reread && sudo supervisorctl update")
     print ("sudo supervisorctl status {}".format(project_name))

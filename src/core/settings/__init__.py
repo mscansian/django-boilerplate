@@ -1,1 +1,1 @@
-from local import *
+from core.settings.settings import *

@@ -22,4 +22,4 @@ compile_css() {
     fi
 }
 
-compile_css $PROJECT_DIR/apps/html5boilerplate/static/css/main
+#compile_css $PROJECT_DIR/apps/example/static/css/main

@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.getcwd()
 sys.path.append(os.path.join(PROJECT_ROOT, 'apps'))
@@ -28,16 +27,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'storages',
-    'debug_toolbar',
-    'djcelery',
-    'apps.html5boilerplate',
+#    'rest_framework',
+#    'storages',
+#    'debug_toolbar',
+#    'djcelery',
+#    'apps.example',
 )
 
 MIDDLEWARE_CLASSES = (
-    'htmlmin.middleware.HtmlMinifyMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
+#    'htmlmin.middleware.HtmlMinifyMiddleware',
+#    'htmlmin.middleware.MarkRequestMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -123,15 +122,15 @@ LOCALE_PATHS = (
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(SRC_DIR, 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 
 # Sessions
 
-SESSION_ENGINE = 'redis_sessions.session'
+#SESSION_ENGINE = 'redis_sessions.session'
 
 
 # Celery
 
-import djcelery
-djcelery.setup_loader()
+#import djcelery
+#djcelery.setup_loader()

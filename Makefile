@@ -36,7 +36,7 @@ distclean: clean
 
 # make test - Run django unittest
 .PHONY: test
-test: install
+test:
 ifndef APP
 	cd $(PROJECT_DIR); \
 	$(PY) $(DJANGO_MANAGE) test
@@ -47,7 +47,7 @@ endif
 
 # make debug - Run debug server
 .PHONY: debug
-debug: install
+debug:
 ifndef PORT
 	cd $(PROJECT_DIR); \
 	$(PY) $(DJANGO_MANAGE) runserver 0.0.0.0:8000
@@ -60,7 +60,7 @@ endif
 
 # make install - Install requirements and dependencies
 .PHONY: install
-install: etc/.apt venv
+install: etc/.apt venv css js
 
 # make force-install - Reset installed status
 .PHONY: force-install
@@ -75,34 +75,43 @@ etc/.apt: etc/dependencies.apt
 
 venv: venv/bin/activate
 venv/bin/activate: etc/requirements.txt
-	test -d venv || virtualenv venv
+	test -d venv || virtualenv -p python3 venv
 	$(PIP) install -Ur $(WD)/etc/requirements.txt
 	touch $(VENV)/bin/activate
 
 ## DJANGO
 
-# make django-migrate [APP] [MMOPTIONS] - Make migrations and migrate database
+# make django-migrate [APP] [OPTIONS] - Migrate database
 .PHONY: django-migrate
-django-migrate: install
+django-migrate:
 ifndef APP
 	cd $(PROJECT_DIR); \
-	$(PY) $(DJANGO_MANAGE) makemigrations $(MMOPTIONS); \
-	$(PY) $(DJANGO_MANAGE) migrate $(MOPTIONS);
+	$(PY) $(DJANGO_MANAGE) migrate $(OPTIONS);
 else
 	cd $(PROJECT_DIR); \
-	$(PY) $(DJANGO_MANAGE) makemigrations $(APP) $(MMOPTIONS); \
-	$(PY) $(DJANGO_MANAGE) migrate $(APP) $(MOPTIONS);
+	$(PY) $(DJANGO_MANAGE) migrate $(APP) $(OPTIONS);
+endif
+
+# make django-makemigrations [APP] [OPTIONS] - Make migrations
+.PHONY: django-makemigrations
+django-makemigrations:
+ifndef APP
+	cd $(PROJECT_DIR); \
+	$(PY) $(DJANGO_MANAGE) makemigrations $(OPTIONS);
+else
+	cd $(PROJECT_DIR); \
+	$(PY) $(DJANGO_MANAGE) makemigrations $(APP) $(OPTIONS);
 endif
 
 # make django-static - Collect static
 .PHONY: django-static
-django-static: install
+django-static:
 	cd $(PROJECT_DIR); \
 	$(PY) $(DJANGO_MANAGE) collectstatic --no-input;
 
 # make django-manage COMMAND - Run manage.py command
 .PHONY: django-manage
-django-manage: install
+django-manage:
 ifdef COMMAND
 	cd $(PROJECT_DIR); \
 	$(PY) $(DJANGO_MANAGE) $(COMMAND);
@@ -136,8 +145,50 @@ endif
 
 # make gunicorn - Build gunicorn/supervisor configuration
 .PHONY: gunicorn
-gunicorn: install
+gunicorn:
 	$(PY) $(WD)/scripts/gunicorn.py $(PROJECT_NAME);
+
+# make gunicorn-status - Check gunicorn status on supervisor
+.PHONY: gunicorn-status
+gunicorn-status:
+	sudo supervisorctl status $(PROJECT_NAME);
+
+# make gunicorn-restart - Restart gunicorn
+.PHONY: gunicorn-restart
+gunicorn-restart:
+	sudo supervisorctl restart $(PROJECT_NAME);
+	sudo supervisorctl status $(PROJECT_NAME);
+
+# make nginx - Build nginx configuration
+.PHONY: nginx
+nginx:
+	$(PY) $(WD)/scripts/nginx.py $(PROJECT_NAME);
+
+# make nginx-restart - Restart nginx server
+.PHONY: nginx-restart
+nginx-restart:
+	sudo service nginx restart
+
+# make nginx-fullrestart - Restart nginx server and gunicorn
+.PHONY: nginx-fullrestart
+nginx-fullrestart:
+	sudo service nginx stop
+	sudo supervisorctl stop $(PROJECT_NAME);
+	sudo supervisorctl start $(PROJECT_NAME);
+	sudo service nginx start
+	sudo supervisorctl status $(PROJECT_NAME);
+
+# make nginx-fullstop - Stop nginx server and gunicorn
+.PHONY: nginx-fullstop
+nginx-fullstop:
+	sudo service nginx stop
+	sudo supervisorctl stop $(PROJECT_NAME);
+
+# make nginx-fullstart - Start nginx server and gunicorn
+.PHONY: nginx-fullstart
+nginx-fullstart:
+	sudo supervisorctl start $(PROJECT_NAME);
+	sudo service nginx start
 
 ## CSS
 

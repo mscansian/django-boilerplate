@@ -15,4 +15,4 @@ compile_js() {
     fi
 }
 
-compile_js $PROJECT_DIR/apps/html5boilerplate/static/js/plugins
+#compile_js $PROJECT_DIR/apps/example/static/js/plugins
